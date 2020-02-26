@@ -1,0 +1,86 @@
+-- debugging code
+show tables;
+select * from Album;
+select * from AlbumSong;
+select * from Band;
+select * from Song;
+select * from Musician;
+select * from BandMember;
+
+-- 1
+select * from Album;
+-- 2
+select * from Album a
+order by a.year desc;
+-- 3
+select * from Album a
+where a.title like "The%";
+-- 4
+select * from Album a
+order by title asc;
+-- 5
+select albumId from Album a
+where a.title = "Nevermind";
+-- 6
+select count(*) from Musician;
+-- 7
+select * from Album a
+where year = (select min(year) from Album);
+
+-- 8
+select sum(s.trackLength) as totalRunningTime from AlbumSong s
+left join Album a on
+s.albumId = a.albumId
+    where a.title = "Rain Dogs";
+
+-- 9
+select a.title albumTitle, a.year yearReleased, b.name bandName from Album a
+left join Band b on
+a.bandId = b.bandId;
+
+-- 10
+select a.title albumTitle, s.title songTitle from Band b
+left join Album a on
+b.bandId = a.bandId
+left join AlbumSong als on
+a.albumId = als.albumId
+left join Song s on
+als.songId = s.songId
+where b.name = "Nirvana";
+   
+-- 11
+select b.name, a.title from Band b
+left join Album a on
+b.bandId = a.bandId;
+           
+-- 12
+select b.name, count(a.albumId) numberOfAlbums from Band b
+left join Album a on
+b.bandId = a.bandId
+group by 1;
+ 
+ -- 13
+select a.title, count(s.trackNumber) numberOfTracks from Album a
+left join AlbumSong s on
+a.albumId = s.albumId
+group by 1;
+   
+-- 14
+select a.title, count(s.trackNumber) numOfTracks from Album a
+left join AlbumSong s on
+a.albumId = s.albumId
+group by 1
+having numOfTracks > 12;
+       
+-- 15
+select m.firstName, m.lastName from Musician m
+left join BandMember bm on
+m.musicianId = bm.musicianId
+where bm.bandId is null;
+   
+-- 16
+select m.firstName, m.lastName, count(bm.bandId) numberOfBandsIn from Musician m
+join BandMember bm on
+m.musicianId = bm.musicianId
+group by m.musicianId
+having count(bm.bandId) > 1;
